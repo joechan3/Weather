@@ -1,0 +1,80 @@
+html{
+  height: 100%;
+}
+body {
+  min-height: 100%;
+  background-image: url("../images/NightC.jpg");
+  background-size: cover;
+  background-position: bottom right;
+  cursor:default;
+/*  background-repeat: no-repeat;*/
+}
+
+a{
+  color: yellow;
+}
+
+a:visited,
+a:hover,
+a:active{
+  color: yellow;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.translucentBG{
+  margin: 15px auto 15px auto;
+  background-color: rgba(0,0,0,0);
+  max-width: 450px;
+/*
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%)translateY(-50%);
+*/
+  
+}
+
+p{
+  text-align:center;
+  font-family: 'Droid Sans', sans-serif;
+  color: #fff;
+}
+
+.location{
+  font-family: 'Allerta Stencil', sans-serif;
+  font-size: 3em;
+}
+
+.weatherIcon{
+  font-size: 4em;
+/*  position:absolute;*/
+}
+
+.currentTemperature{
+  font-size: 2em;
+  font-weight: bold;
+  cursor:pointer;
+  display: block;
+  max-width: 40%;
+  margin: 0 auto;
+}
+
+.dayAndTime{
+  font-size: 1.2em;
+  letter-spacing: 0.25em;
+}
+
+.windDirectionIcon,
+.thermometer{
+  font-size: 1.5em;
+}
+
+footer{
+  font-size: 0.8em;
+  position: absolute;
+  left:0;
+  right:0;
+  bottom: 0;
+  text-shadow: 1px 1px 1px #000;
+}

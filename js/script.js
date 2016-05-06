@@ -108,10 +108,10 @@ $(document).ready(function() {
       return (temp * 9 / 5 - 459.67).toFixed(0);
     }
 
-    $(".location").text(weatherData.name);
+    $(".location").text(weatherData.name); 
     $(".weatherIcon i").addClass("wi wi-owm-" + weatherData.weather[0].id);
     $(".dayAndTime").text(getDateTime());
-    $(".currentTemperature").html(toCelcius(weatherData.main.temp) + "&deg;C");
+    $(".currentTemperature").html(toCelcius(weatherData.main.temp) + "&deg;<span style='color: yellow;'>C</span>");
     $(".thermometer i").addClass("wi wi-thermometer");
     $(".minMaxTemperatures").html(toCelcius(weatherData.main.temp_min) + "&deg;C/" + toCelcius(weatherData.main.temp_max) + "&deg;C");
 
@@ -123,17 +123,19 @@ $(document).ready(function() {
     var unitIndex = 0;
     $(".currentTemperature").click(function() {
       if (unitIndex == 0) {
-        $(".currentTemperature").html(toFahrenheit(weatherData.main.temp) + "&deg;F");
+        $(".currentTemperature").html(toFahrenheit(weatherData.main.temp) + "&deg;<span style='color: yellow;'>F</span>");
         $(".minMaxTemperatures").html(toFahrenheit(weatherData.main.temp_min) + "&deg;F/" + toFahrenheit(weatherData.main.temp_max) + "&deg;F");
         $(".windSpeed").text(windSpeedMPH + " mi/h");
         unitIndex = 1;
       } else {
-        $(".currentTemperature").html(toCelcius(weatherData.main.temp) + "&deg;C");
+        $(".currentTemperature").html(toCelcius(weatherData.main.temp) + "&deg;<span style='color: yellow;'>C</span>");
         $(".minMaxTemperatures").html(toCelcius(weatherData.main.temp_min) + "&deg;C/" + toCelcius(weatherData.main.temp_max) + "&deg;C");
         $(".windSpeed").text(windSpeedKPH + " km/h");
         unitIndex = 0;
       }
     });
+    
+    $(".translucentBG").css({"background-color":"rgba(0,0,0,0.75)", "border-radius":"1.5em"});
   }
 
   getUserLocation(getWeather, updateHTMLCSS);
