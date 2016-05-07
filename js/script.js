@@ -1,3 +1,5 @@
+//Thanks: https://github.com/mourner/suncalc (A tiny JavaScript library for calculating sun/moon positions and phases.)
+
 $(document).ready(function() {
   "use strict";
 
@@ -49,11 +51,13 @@ $(document).ready(function() {
   }
 
   function toCelcius(temp) {
-    return (temp - 273.15).toFixed(0);
+    temp -= 273.15;
+    return temp.toFixed(0);
   }
 
   function toFahrenheit(temp) {
-    return (temp * 9 / 5 - 459.67).toFixed(0);
+    temp = temp * 9 / 5 - 459.67;
+    return temp.toFixed(0);
   }
   
   function getUserLocation(callback, callbackCallback) {
@@ -103,80 +107,90 @@ $(document).ready(function() {
     var testJSONURL = "https://api.myjson.com/bins/1bm8o"
 
     $.getJSON(testJSONURL, function(data) {
-      callback(data);
+      callback(data, coordinates);
     });
   }
 
-  function updateHTMLCSS(weatherData) {
+  function updateHTMLCSS(weatherData, position) {
 
-    $(".location").text(weatherData.name); 
-    $(".weatherIcon").attr("title", weatherData.weather[0].description);
-    $(".weatherIcon i").addClass("wi wi-owm-" + weatherData.weather[0].id);
-    $(".dayAndTime").text(getDateTime());
-    $(".currentTemperature").html(toCelcius(weatherData.main.temp) + "&deg;<span style='color: yellow;'>C</span>");
-    $(".thermometer i").addClass("wi wi-thermometer");
-    $(".minMaxTemperatures").html(toCelcius(weatherData.main.temp_min) + "&deg;C/" + toCelcius(weatherData.main.temp_max) + "&deg;C");
-
+    var location = weatherData.name;
+    var description = weatherData.weather[0].description;
+    var iconID = weatherData.weather[0].id;
+    var currentTempC = toCelcius(weatherData.main.temp);
+    var currentTempF = toFahrenheit(weatherData.main.temp);
+    var minTempC = toCelcius(weatherData.main.temp_min);
+    var minTempF = toFahrenheit(weatherData.main.temp_min);
+    var maxTempC = toCelcius(weatherData.main.temp_max);
+    var maxTempF = toFahrenheit(weatherData.main.temp_max);
     var windSpeedKPH = (weatherData.wind.speed * 3.6).toFixed(0); //1 m/s : 3.6 km/h
     var windSpeedMPH = (weatherData.wind.speed * 2.237).toFixed(0); //1 m/s : 2.23694 mi/h
-    $(".windDirectionIcon i").addClass("wi wi-wind towards-" + weatherData.wind.deg.toFixed(0) + "-deg");
-    $(".windSpeed").text(windSpeedKPH + " km/h");
-    
+    var windDirection = weatherData.wind.deg.toFixed(0);
+    var sunTimes = SunCalc.getTimes(new Date(), position.coords.latitude, position.coords.longitude);
+    var sunsetTime = sunTimes.sunset.getTime(); //milliseconds
+    var currentTime = new Date();
+    var isItNight = false;
     var unitIndex = 0;
-    $(".currentTemperature").click(function() {
+    console.log(weatherData);
+    function changeUnits(){
       if (unitIndex == 0) {
-        $(".currentTemperature").html(toFahrenheit(weatherData.main.temp) + "&deg;<span style='color: yellow;'>F</span>");
-        $(".minMaxTemperatures").html(toFahrenheit(weatherData.main.temp_min) + "&deg;F/" + toFahrenheit(weatherData.main.temp_max) + "&deg;F");
+        $(".currentTemperature").html(currentTempF + "&deg;<span style='color: yellow;'>F</span>");
+        $(".minMaxTemperatures").html(minTempF + "&deg;F/" + maxTempF + "&deg;F");
         $(".windSpeed").text(windSpeedMPH + " mi/h");
         unitIndex = 1;
       } else {
-        $(".currentTemperature").html(toCelcius(weatherData.main.temp) + "&deg;<span style='color: yellow;'>C</span>");
-        $(".minMaxTemperatures").html(toCelcius(weatherData.main.temp_min) + "&deg;C/" + toCelcius(weatherData.main.temp_max) + "&deg;C");
+        $(".currentTemperature").html(currentTempC + "&deg;<span style='color: yellow;'>C</span>");
+        $(".minMaxTemperatures").html(minTempC + "&deg;C/" + maxTempC + "&deg;C");
         $(".windSpeed").text(windSpeedKPH + " km/h");
         unitIndex = 0;
       }
-    });
+    }
+    
+    function changeBackground(){
+      switch (isItNight){
+        case false:
+          if (currentTempC > 15){
+            $("body").css("background-image", "url('images/DayA-tiny.jpg')");
+          }
+          if (currentTempC > 0 && currentTempC <= 15){
+            $("body").css("background-image", "url('images/DayB-tiny.jpg')");
+          }
+          if (currentTempC <= 0){
+            $("body").css("background-image", "url('images/DayC-tiny.jpg')");
+          }
+          break;
+        case true:   
+          if (currentTempC > 15){
+            $("body").css("background-image", "url('images/NightA-tiny.jpg')");
+          }
+          if (currentTempC > 0 && currentTempC <= 15){
+            $("body").css("background-image", "url('images/NightB-tiny.jpg')");
+          }
+          if (currentTempC <= 0){
+            $("body").css("background-image", "url('images/NightC-tiny.jpg')");
+          }
+          break;
+      }
+    }
+    
+    $(".location").text(location); 
+    $(".weatherIcon").attr("title", description);
+    $(".weatherIcon i").addClass("wi wi-owm-" + iconID);
+    $(".dayAndTime").text(getDateTime());
+    $(".currentTemperature").html(currentTempC + "&deg;<span style='color: yellow;'>C</span>");
+    $(".thermometer i").addClass("wi wi-thermometer");
+    $(".minMaxTemperatures").html(minTempC + "&deg;C/" + maxTempC + "&deg;C");
+    $(".windDirectionIcon i").addClass("wi wi-wind towards-" + windDirection + "-deg");
+    $(".windSpeed").text(windSpeedKPH + " km/h");
+    
+    $(".currentTemperature").click(changeUnits);
     
     $(".translucentBG").css({"background-color":"rgba(0,0,0,0.75)", "border-radius":"1.5em"});
     
-    /*var currentTime = new Date();
-    var isItNight = false;
-    
-    if (currentTime.getTime() > weatherData.sys.sunset){
+    if (currentTime.getTime() > sunsetTime){
       isItNight = true;
     }
-      
-//    isItNight = true;
-//    weatherData.main.temp = 20 + 273;
-    alert("Current Time: " + currentTime.getTime() + " Sunset " + weatherData.sys.sunset);
+    changeBackground();
     
-    switch (isItNight){
-      case false:
-        if (toCelcius(weatherData.main.temp) > 15){
-          $("body").css("background-image", "url('images/DayA-tiny.jpg')");
-        }
-        if (toCelcius(weatherData.main.temp) > 0 && toCelcius(weatherData.main.temp) <= 15){
-          $("body").css("background-image", "url('images/DayB-tiny.jpg')");
-        }
-        if (toCelcius(weatherData.main.temp) <= 0){
-          $("body").css("background-image", "url('images/DayC-tiny.jpg')");
-        }
-        break;
-      case true:   
-        if (toCelcius(weatherData.main.temp) > 15){
-          $("body").css("background-image", "url('images/NightA-tiny.jpg')");
-        }
-        if (toCelcius(weatherData.main.temp) > 0 && toCelcius(weatherData.main.temp) <= 15){
-          $("body").css("background-image", "url('images/NightB-tiny.jpg')");
-        }
-        if (toCelcius(weatherData.main.temp) <= 0){
-          $("body").css("background-image", "url('images/NightC-tiny.jpg')");
-        }
-        break;
-    }*/
-    
-
-
 }
   
   getUserLocation(getWeather, updateHTMLCSS);
