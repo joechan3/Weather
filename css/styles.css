@@ -3,11 +3,10 @@ html{
 }
 body {
   min-height: 100%;
-  background-image: url("../images/NightC.jpg");
+  background-image: url("../images/default-tiny.jpeg");
   background-size: cover;
-  background-position: bottom right;
+  background-position: center center;
   cursor:default;
-/*  background-repeat: no-repeat;*/
 }
 
 a{
@@ -26,13 +25,6 @@ a:active{
   margin: 15px auto 15px auto;
   background-color: rgba(0,0,0,0);
   max-width: 450px;
-/*
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translateX(-50%)translateY(-50%);
-*/
-  
 }
 
 p{
@@ -76,5 +68,5 @@ footer{
   left:0;
   right:0;
   bottom: 0;
-  text-shadow: 1px 1px 1px #000;
+  text-shadow: 2px 2px 2px #000;
 }

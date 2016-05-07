@@ -48,6 +48,14 @@ $(document).ready(function() {
     return dayOfWeek.toUpperCase() + " " + hours + ":" + minutes + " " + meridiemSide;
   }
 
+  function toCelcius(temp) {
+    return (temp - 273.15).toFixed(0);
+  }
+
+  function toFahrenheit(temp) {
+    return (temp * 9 / 5 - 459.67).toFixed(0);
+  }
+  
   function getUserLocation(callback, callbackCallback) {
     function getCoordinates() {
       function geolocSuccess(position) {
@@ -70,7 +78,7 @@ $(document).ready(function() {
             console.log("Geolocation position is unavailable");
             break;
           default:
-            console.log("Unknown geolocation error")
+            console.log("Unknown geolocation error");
         }
       }
 
@@ -100,15 +108,9 @@ $(document).ready(function() {
   }
 
   function updateHTMLCSS(weatherData) {
-    function toCelcius(temp) {
-      return (temp - 273.15).toFixed(0);
-    }
-
-    function toFahrenheit(temp) {
-      return (temp * 9 / 5 - 459.67).toFixed(0);
-    }
 
     $(".location").text(weatherData.name); 
+    $(".weatherIcon").attr("title", weatherData.weather[0].description);
     $(".weatherIcon i").addClass("wi wi-owm-" + weatherData.weather[0].id);
     $(".dayAndTime").text(getDateTime());
     $(".currentTemperature").html(toCelcius(weatherData.main.temp) + "&deg;<span style='color: yellow;'>C</span>");
@@ -136,13 +138,47 @@ $(document).ready(function() {
     });
     
     $(".translucentBG").css({"background-color":"rgba(0,0,0,0.75)", "border-radius":"1.5em"});
-  }
+    
+    /*var currentTime = new Date();
+    var isItNight = false;
+    
+    if (currentTime.getTime() > weatherData.sys.sunset){
+      isItNight = true;
+    }
+      
+//    isItNight = true;
+//    weatherData.main.temp = 20 + 273;
+    alert("Current Time: " + currentTime.getTime() + " Sunset " + weatherData.sys.sunset);
+    
+    switch (isItNight){
+      case false:
+        if (toCelcius(weatherData.main.temp) > 15){
+          $("body").css("background-image", "url('images/DayA-tiny.jpg')");
+        }
+        if (toCelcius(weatherData.main.temp) > 0 && toCelcius(weatherData.main.temp) <= 15){
+          $("body").css("background-image", "url('images/DayB-tiny.jpg')");
+        }
+        if (toCelcius(weatherData.main.temp) <= 0){
+          $("body").css("background-image", "url('images/DayC-tiny.jpg')");
+        }
+        break;
+      case true:   
+        if (toCelcius(weatherData.main.temp) > 15){
+          $("body").css("background-image", "url('images/NightA-tiny.jpg')");
+        }
+        if (toCelcius(weatherData.main.temp) > 0 && toCelcius(weatherData.main.temp) <= 15){
+          $("body").css("background-image", "url('images/NightB-tiny.jpg')");
+        }
+        if (toCelcius(weatherData.main.temp) <= 0){
+          $("body").css("background-image", "url('images/NightC-tiny.jpg')");
+        }
+        break;
+    }*/
+    
 
+
+}
+  
   getUserLocation(getWeather, updateHTMLCSS);
 
 });
-
-// Update CSS
-//  - Determine current screen size and orientation
-//  - Change background to appropriate picture
-//  
