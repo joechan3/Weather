@@ -111,12 +111,13 @@ $(document).ready(function() {
   }
 
   function getWeather(callback, coordinates) {
-    var apiKey = "a30715156be421b33a5c806dbda32111";
-    var apiURL = "http://api.openweathermap.org/data/2.5/weather?lat=" + coordinates.coords.latitude + "&lon=" + coordinates.coords.longitude + "139&appid=" + apiKey;
+    var apiKey = "2befc703f46550fb43800fa4ca5516f2";
+    var apiURL = "https://api.forecast.io/forecast/" + apiKey + "/" + coordinates.coords.latitude + "," + coordinates.coords.longitude;
     var testJSONURL = "https://api.myjson.com/bins/1bm8o";
-
+    //https://api.forecast.io/forecast/APIKEY/LATITUDE,LONGITUDE
     $.getJSON(apiURL, function(data) {
-      callback(data, coordinates);
+      console.log(data);
+      //callback(data, coordinates);
     });
   }
 
