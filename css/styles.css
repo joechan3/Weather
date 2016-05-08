@@ -1,5 +1,6 @@
 /*
-Thanks: The Weather Icons project - https://erikflowers.github.io/weather-icons/
+Thanks: 
+   - The Weather Icons project - https://erikflowers.github.io/weather-icons/
 */
 
 html{
@@ -29,6 +30,19 @@ a:active{
   margin: 15px auto 15px auto;
   background-color: rgba(0,0,0,0);
   max-width: 450px;
+}
+
+.fa-pulse{
+  text-align: center;
+  display:block;
+  max-width:25%;
+  margin: 0 auto;
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  font-size: 6em;
+  color: yellow;
+  text-shadow: 2px 2px 2px #000;
 }
 
 p{
@@ -72,5 +86,5 @@ footer{
   left:0;
   right:0;
   bottom: 0;
-  text-shadow: 2px 2px 2px #000;
+  text-shadow: 3px 3px 3px #000;
 }

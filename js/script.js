@@ -151,7 +151,6 @@ $(document).ready(function() {
         unitIndex = 0;
       }
     }
-    
     function changeBackground(){
       switch (isItNight){
         case false:
@@ -179,6 +178,7 @@ $(document).ready(function() {
       }
     }
     
+    
     $(".location").text(location); 
     $(".weatherIcon").attr("title", description);
     $(".weatherIcon i").addClass("wi wi-owm-" + iconID);
@@ -191,11 +191,13 @@ $(document).ready(function() {
     
     $(".currentTemperature").click(changeUnits);
     
+    $(".fa-pulse").css("display", "none");
     $(".translucentBG").css({"background-color":"rgba(0,0,0,0.75)", "border-radius":"1.5em"});
     
     if (currentTime.getTime() > sunsetTime){
       isItNight = true;
     }
+    
     changeBackground();
     
 }
