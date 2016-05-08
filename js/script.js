@@ -61,42 +61,49 @@ $(document).ready(function() {
   }
   
   function getUserLocation(callback, callbackCallback) {
+    var weatherHasLoaded = false;
+    var timeoutID;
+    
+    function locationNotShared(){
+      if (!weatherHasLoaded){
+      alert("Sorry. You have not shared your location. Weather cannot be shown. Please refresh the window and share your location.");
+      }
+    }
+    
     function getCoordinates() {
       function geolocSuccess(position) {
-        console.log("Latitude is " + position.coords.latitude);
-        console.log("Longitude is " + position.coords.longitude);
-        console.log(position);
+        weatherHasLoaded = true;
         callback(callbackCallback, position);
       }
 
       function geolocError(error) {
-        //console.log(error);
+        weatherHasLoaded = true;
         switch (error.code) {
           case error.TIMEOUT:
-            console.log("Geolocation timeout");
+            alert("Sorry. Geolocation timeout. Weather cannot be shown.");
             break;
           case error.PERMISSION_DENIED:
-            console.log("Geolocation permission denied");
+            alert("Sorry. Geolocation permission denied. Weather cannot be shown.");
             break;
           case error.POSITION_UNAVAILABLE:
-            console.log("Geolocation position is unavailable");
+            alert("Sorry. Geolocation position is unavailable. Weather cannot be shown.");
             break;
           default:
-            console.log("Unknown geolocation error");
+            alert("Sorry. Unknown geolocation error. Weather cannot be shown.");
         }
       }
 
-      navigator.geolocation.getCurrentPosition(geolocSuccess, geolocError, {
-        timeout: 7000
-      });
+      navigator.geolocation.getCurrentPosition(geolocSuccess, geolocError, {timeout: 7000});
+      
+      timeoutID = window.setTimeout(locationNotShared, 10000);
     }
 
     var geolocationSupported = Boolean(navigator.geolocation);
     if (geolocationSupported) {
       getCoordinates();
     } else {
-      console.log("Geolocation functionality is unavailable.");
-      //Some error page
+      weatherHasLoaded = true;
+      alert("Sorry, geolocation functionality is unavailable. Weather cannot be shown.");
       return;
     }
   }
