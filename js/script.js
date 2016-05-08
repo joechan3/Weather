@@ -59,17 +59,17 @@ $(document).ready(function() {
     temp = temp * 9 / 5 - 459.67;
     return temp.toFixed(0);
   }
-  
+
   function getUserLocation(callback, callbackCallback) {
     var weatherHasLoaded = false;
     var timeoutID;
-    
-    function locationNotShared(){
-      if (!weatherHasLoaded){
-      alert("Sorry. You have not shared your location. Weather cannot be shown. Please refresh the window and share your location.");
+
+    function locationNotShared() {
+      if (!weatherHasLoaded) {
+        alert("Woof! You have not shared your location. Weather cannot be shown. Please refresh the window and share your location.");
       }
     }
-    
+
     function getCoordinates() {
       function geolocSuccess(position) {
         weatherHasLoaded = true;
@@ -80,21 +80,23 @@ $(document).ready(function() {
         weatherHasLoaded = true;
         switch (error.code) {
           case error.TIMEOUT:
-            alert("Sorry. Geolocation timeout. Weather cannot be shown.");
+            alert("Woof! Geolocation timeout. Weather cannot be shown.");
             break;
           case error.PERMISSION_DENIED:
-            alert("Sorry. Geolocation permission denied. Weather cannot be shown.");
+            alert("Woof! Geolocation permission denied. Weather cannot be shown.");
             break;
           case error.POSITION_UNAVAILABLE:
-            alert("Sorry. Geolocation position is unavailable. Weather cannot be shown.");
+            alert("Woof! Geolocation position is unavailable. Weather cannot be shown.");
             break;
           default:
-            alert("Sorry. Unknown geolocation error. Weather cannot be shown.");
+            alert("Woof! Unknown geolocation error. Weather cannot be shown.");
         }
       }
 
-      navigator.geolocation.getCurrentPosition(geolocSuccess, geolocError, {timeout: 7000});
-      
+      navigator.geolocation.getCurrentPosition(geolocSuccess, geolocError, {
+        timeout: 7000
+      });
+
       timeoutID = window.setTimeout(locationNotShared, 10000);
     }
 
@@ -103,7 +105,7 @@ $(document).ready(function() {
       getCoordinates();
     } else {
       weatherHasLoaded = true;
-      alert("Sorry, geolocation functionality is unavailable. Weather cannot be shown.");
+      alert("Woof! Geolocation functionality is unavailable. Weather cannot be shown.");
       return;
     }
   }
@@ -111,9 +113,9 @@ $(document).ready(function() {
   function getWeather(callback, coordinates) {
     var apiKey = "a30715156be421b33a5c806dbda32111";
     var apiURL = "http://api.openweathermap.org/data/2.5/weather?lat=" + coordinates.coords.latitude + "&lon=" + coordinates.coords.longitude + "139&appid=" + apiKey;
-    var testJSONURL = "https://api.myjson.com/bins/1bm8o"
+    var testJSONURL = "https://api.myjson.com/bins/1bm8o";
 
-    $.getJSON(testJSONURL, function(data) {
+    $.getJSON(apiURL, function(data) {
       callback(data, coordinates);
     });
   }
@@ -134,12 +136,14 @@ $(document).ready(function() {
     var windDirection = weatherData.wind.deg.toFixed(0);
     var sunTimes = SunCalc.getTimes(new Date(), position.coords.latitude, position.coords.longitude);
     var sunsetTime = sunTimes.sunset.getTime(); //milliseconds
+    var sunriseTime = sunTimes.sunrise.getTime(); //milliseconds
     var currentTime = new Date();
     var isItNight = false;
     var unitIndex = 0;
     console.log(weatherData);
-    function changeUnits(){
-      if (unitIndex == 0) {
+
+    function changeUnits() {
+      if (unitIndex === 0) {
         $(".currentTemperature").html(currentTempF + "&deg;<span style='color: yellow;'>F</span>");
         $(".minMaxTemperatures").html(minTempF + "&deg;F/" + maxTempF + "&deg;F");
         $(".windSpeed").text(windSpeedMPH + " mi/h");
@@ -151,35 +155,35 @@ $(document).ready(function() {
         unitIndex = 0;
       }
     }
-    function changeBackground(){
-      switch (isItNight){
+
+    function changeBackground() {
+      switch (isItNight) {
         case false:
-          if (currentTempC > 15){
+          if (currentTempC > 15) {
             $("body").css("background-image", "url('images/DayA-tiny.jpg')");
           }
-          if (currentTempC > 0 && currentTempC <= 15){
+          if (currentTempC > 0 && currentTempC <= 15) {
             $("body").css("background-image", "url('images/DayB-tiny.jpg')");
           }
-          if (currentTempC <= 0){
+          if (currentTempC <= 0) {
             $("body").css("background-image", "url('images/DayC-tiny.jpg')");
           }
           break;
-        case true:   
-          if (currentTempC > 15){
+        case true:
+          if (currentTempC > 15) {
             $("body").css("background-image", "url('images/NightA-tiny.jpg')");
           }
-          if (currentTempC > 0 && currentTempC <= 15){
+          if (currentTempC > 0 && currentTempC <= 15) {
             $("body").css("background-image", "url('images/NightB-tiny.jpg')");
           }
-          if (currentTempC <= 0){
+          if (currentTempC <= 0) {
             $("body").css("background-image", "url('images/NightC-tiny.jpg')");
           }
           break;
       }
     }
-    
-    
-    $(".location").text(location); 
+
+    $(".location").text(location);
     $(".weatherIcon").attr("title", description);
     $(".weatherIcon i").addClass("wi wi-owm-" + iconID);
     $(".dayAndTime").text(getDateTime());
@@ -188,20 +192,23 @@ $(document).ready(function() {
     $(".minMaxTemperatures").html(minTempC + "&deg;C/" + maxTempC + "&deg;C");
     $(".windDirectionIcon i").addClass("wi wi-wind towards-" + windDirection + "-deg");
     $(".windSpeed").text(windSpeedKPH + " km/h");
-    
+
     $(".currentTemperature").click(changeUnits);
-    
+
     $(".fa-pulse").css("display", "none");
-    $(".translucentBG").css({"background-color":"rgba(0,0,0,0.75)", "border-radius":"1.5em"});
-    
-    if (currentTime.getTime() > sunsetTime){
+    $(".translucentBG").css({
+      "background-color": "rgba(0,0,0,0.75)",
+      "border-radius": "1.5em"
+    });
+
+    if (currentTime.getTime() > sunsetTime || currentTime.getTime() < sunriseTime) {
       isItNight = true;
     }
-    
+
     changeBackground();
-    
-}
-  
+
+  }
+
   getUserLocation(getWeather, updateHTMLCSS);
 
 });

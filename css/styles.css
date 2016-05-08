@@ -1,90 +1,106 @@
-/*
-Thanks: 
-   - The Weather Icons project - https://erikflowers.github.io/weather-icons/
-*/
+/*Thanks: The Weather Icons project - https://erikflowers.github.io/weather-icons/*/
 
-html{
-  height: 100%;
+::selection {
+  background-color: yellow;
+  color: #000;
 }
-body {
+
+::-moz-selection {
+  background-color: yellow;
+  color: #000;
+}
+
+html {
   min-height: 100%;
+}
+
+body {
+  min-height: 100vh;
   background-image: url("../images/default-tiny.jpeg");
   background-size: cover;
   background-position: center center;
-  cursor:default;
+  cursor: default;
+  background-repeat: no-repeat;
+  background-color: yellow;
 }
 
-a{
+a {
   color: yellow;
 }
 
 a:visited,
 a:hover,
-a:active{
+a:active,
+a:focus {
   color: yellow;
   font-weight: bold;
   text-decoration: underline;
 }
 
-.translucentBG{
+.translucentBG {
   margin: 15px auto 15px auto;
-  background-color: rgba(0,0,0,0);
+  background-color: rgba(0, 0, 0, 0);
   max-width: 450px;
 }
 
-.fa-pulse{
-  text-align: center;
-  display:block;
-  max-width:25%;
-  margin: 0 auto;
-  position: absolute;
-  top: 25%;
-  left: 50%;
+.fa{
+  display: block;
+  width: 33%;
+  margin: 25% 30% 0 auto;
+}
+
+.fa-pulse {
+  position: relative;
+  text-align:center;
   font-size: 6em;
   color: yellow;
   text-shadow: 2px 2px 2px #000;
 }
 
-p{
-  text-align:center;
+p {
+  text-align: center;
   font-family: 'Droid Sans', sans-serif;
   color: #fff;
 }
 
-.location{
+.location {
   font-family: 'Allerta Stencil', sans-serif;
   font-size: 3em;
 }
 
-.weatherIcon{
+.weatherIcon {
   font-size: 4em;
-/*  position:absolute;*/
 }
 
-.currentTemperature{
+.currentTemperature {
   font-size: 2em;
   font-weight: bold;
-  cursor:pointer;
+  cursor: pointer;
   display: block;
   max-width: 40%;
   margin: 0 auto;
 }
 
-.dayAndTime{
+.dayAndTime {
   font-size: 1.2em;
   letter-spacing: 0.25em;
 }
 
 .windDirectionIcon,
-.thermometer{
+.thermometer {
   font-size: 1.5em;
 }
 
-footer{
+footer {
   font-size: 0.8em;
   position: absolute;
-  left:0;
-  right:0;
+  left: 0;
+  right: 0;
   bottom: 0;
   text-shadow: 3px 3px 3px #000;
 }
+
+@media (max-height: 320px) {
+  footer {
+    display:none;
+  }
