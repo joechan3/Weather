@@ -112,12 +112,11 @@ $(document).ready(function() {
 
   function getWeather(callback, coordinates) {
     var apiKey = "2befc703f46550fb43800fa4ca5516f2";
-    var apiURL = "https://api.forecast.io/forecast/" + apiKey + "/" + coordinates.coords.latitude + "," + coordinates.coords.longitude;
+    var apiURL = "https://api.forecast.io/forecast/" + apiKey + "/" + coordinates.coords.latitude + "," + coordinates.coords.longitude + "?callback=?";
     var testJSONURL = "https://api.myjson.com/bins/1bm8o";
-    //https://api.forecast.io/forecast/APIKEY/LATITUDE,LONGITUDE
     $.getJSON(apiURL, function(data) {
       console.log(data);
-      //callback(data, coordinates);
+      callback(data, coordinates);
     });
   }
 
