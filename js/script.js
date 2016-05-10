@@ -1,5 +1,6 @@
 //Thanks: https://github.com/mourner/suncalc (A tiny JavaScript library for calculating sun/moon positions and phases.)
 
+
 $(document).ready(function() {
   "use strict";
 
@@ -51,16 +52,11 @@ $(document).ready(function() {
   }
 
   function toCelcius(temp) {
-    temp -= 273.15;
+    temp = (temp-32) * (5/9);
     return temp.toFixed(0);
   }
 
-  function toFahrenheit(temp) {
-    temp = temp * 9 / 5 - 459.67;
-    return temp.toFixed(0);
-  }
-
-  function getUserLocation(callback, callbackCallback) {
+  function getUserLocation() {
     var weatherHasLoaded = false;
     var timeoutID;
 
@@ -73,7 +69,7 @@ $(document).ready(function() {
     function getCoordinates() {
       function geolocSuccess(position) {
         weatherHasLoaded = true;
-        callback(callbackCallback, position);
+        getWeather(position);
       }
 
       function geolocError(error) {
@@ -110,38 +106,54 @@ $(document).ready(function() {
     }
   }
 
-  function getWeather(callback, coordinates) {
+  function getWeather(coordinates) {
     var apiKey = "2befc703f46550fb43800fa4ca5516f2";
     var apiURL = "https://api.forecast.io/forecast/" + apiKey + "/" + coordinates.coords.latitude + "," + coordinates.coords.longitude + "?callback=?";
     var testJSONURL = "https://api.myjson.com/bins/1bm8o";
     $.getJSON(apiURL, function(data) {
-      console.log(data);
-      callback(data, coordinates);
+      reverseGeocoding(coordinates, data);
     });
   }
 
-  function updateHTMLCSS(weatherData, position) {
+  function reverseGeocoding(latLong, weatherData){
+    var apiKey = "ppQrUyVhFEYA7Fgo3KOUkOMOZMeIMDAf";
+    var apiURL = "https://open.mapquestapi.com/geocoding/v1/reverse?key=" + apiKey + "&location=" + latLong.coords.latitude + "," + latLong.coords.longitude;
+    var cityState = new Object();
+    
+    $.getJSON(apiURL, function(data) {
+      cityState = {
+        city : data.results[0].locations[0].adminArea5,
+        state: data.results[0].locations[0].adminArea3
+      };  
+      updateHTMLCSS(cityState, weatherData);
+    });
+    
+  
+    }
+  
+  function updateHTMLCSS(place, weatherInfo) {
 
-    var location = weatherData.name;
-    var description = weatherData.weather[0].description;
-    var iconID = weatherData.weather[0].id;
-    var currentTempC = toCelcius(weatherData.main.temp);
-    var currentTempF = toFahrenheit(weatherData.main.temp);
-    var minTempC = toCelcius(weatherData.main.temp_min);
-    var minTempF = toFahrenheit(weatherData.main.temp_min);
-    var maxTempC = toCelcius(weatherData.main.temp_max);
-    var maxTempF = toFahrenheit(weatherData.main.temp_max);
-    var windSpeedKPH = (weatherData.wind.speed * 3.6).toFixed(0); //1 m/s : 3.6 km/h
-    var windSpeedMPH = (weatherData.wind.speed * 2.237).toFixed(0); //1 m/s : 2.23694 mi/h
-    var windDirection = weatherData.wind.deg.toFixed(0);
-    var sunTimes = SunCalc.getTimes(new Date(), position.coords.latitude, position.coords.longitude);
+    var description = weatherInfo.currently.summary;
+    var iconID = weatherInfo.currently.icon;
+    var currentTempC = toCelcius(weatherInfo.currently.temperature);
+    var currentTempF = (weatherInfo.currently.temperature).toFixed(0);
+    var minTempC = toCelcius(weatherInfo.daily.data[0].temperatureMin);
+    var minTempF = (weatherInfo.daily.data[0].temperatureMin).toFixed(0);
+    var maxTempC = toCelcius(weatherInfo.daily.data[0].temperatureMax);
+    var maxTempF = (weatherInfo.daily.data[0].temperatureMax).toFixed(0);
+    var windSpeedKPH = (weatherInfo.currently.windSpeed * 1.61).toFixed(0); //1 mph : 1.60934 kph
+    var windSpeedMPH = (weatherInfo.currently.windSpeed).toFixed(0);
+    var windDirection = weatherInfo.currently.windBearing.toFixed(0);
+    var sunTimes = SunCalc.getTimes(new Date(), weatherInfo.latitude, weatherInfo.longitude);
     var sunsetTime = sunTimes.sunset.getTime(); //milliseconds
     var sunriseTime = sunTimes.sunrise.getTime(); //milliseconds
     var currentTime = new Date();
     var isItNight = false;
     var unitIndex = 0;
-    console.log(weatherData);
+    console.log(weatherInfo);
 
+    
+    
     function changeUnits() {
       if (unitIndex === 0) {
         $(".currentTemperature").html(currentTempF + "&deg;<span style='color: yellow;'>F</span>");
@@ -183,9 +195,15 @@ $(document).ready(function() {
       }
     }
 
-    $(".location").text(location);
+    //Maquest occasionally returns a blank string for the state.
+    if (place.state === ""){
+      $(".location").text(place.city);
+    } else {
+      $(".location").text(place.city + ", " + place.state);
+    }
+    
     $(".weatherIcon").attr("title", description);
-    $(".weatherIcon i").addClass("wi wi-owm-" + iconID);
+    $(".weatherIcon i").addClass("wi wi-forecast-io-" + iconID);
     $(".dayAndTime").text(getDateTime());
     $(".currentTemperature").html(currentTempC + "&deg;<span style='color: yellow;'>C</span>");
     $(".thermometer i").addClass("wi wi-thermometer");
@@ -209,6 +227,6 @@ $(document).ready(function() {
 
   }
 
-  getUserLocation(getWeather, updateHTMLCSS);
+  getUserLocation();
 
 });
