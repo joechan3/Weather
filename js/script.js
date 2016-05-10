@@ -1,6 +1,5 @@
 //Thanks: https://github.com/mourner/suncalc (A tiny JavaScript library for calculating sun/moon positions and phases.)
 
-
 $(document).ready(function() {
   "use strict";
 
@@ -180,6 +179,9 @@ $(document).ready(function() {
           if (currentTempC <= 0) {
             $("body").css("background-image", "url('images/DayC-tiny.jpg')");
           }
+          if (iconID === "rain"){
+            $("body").css("background-image", "url('images/Rain-tiny.jpg')");
+          }
           break;
         case true:
           if (currentTempC > 15) {
@@ -222,9 +224,8 @@ $(document).ready(function() {
     if (currentTime.getTime() > sunsetTime || currentTime.getTime() < sunriseTime) {
       isItNight = true;
     }
-
+    
     changeBackground();
-
   }
 
   getUserLocation();
