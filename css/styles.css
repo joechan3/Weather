@@ -101,7 +101,7 @@ footer {
   text-shadow: 3px 3px 3px #000;
 }
 
-@media (max-height: 320px) {
+@media (max-height: 411px) {
   footer {
     display:none;
   }
