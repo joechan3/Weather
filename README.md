@@ -35,4 +35,5 @@ There are no special installation instructions to use this app.
 * [MapQuest API](http://open.mapquestapi.com/geocoding/#reverse)
 * [Forecast API](https://developer.forecast.io/docs/v2)
 * [Font Awesome](https://fortawesome.github.io/Font-Awesome/)
+* [Favicon made by Freepik from Flaticon](http://www.flaticon.com)
 
