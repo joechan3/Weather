@@ -3,18 +3,6 @@
 Weather and Corgi displays the local current weather and a matching background picture featuring a Corgi dog.
 [https://joechan3.github.io/Weather](https://joechan3.github.io/Weather)
 
-## Getting Started
-
-There are no special requirements to get a copy of the project up and running on your local machine for development and testing purposes.
-
-### Prerequisities
-
-There are no special prerequisites to use this app.
-
-### Installing
-
-There are no special installation instructions to use this app.
-
 ## Built With
 
 * HTML
