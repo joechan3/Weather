@@ -115,7 +115,7 @@ $(document).ready(function() {
 
   function reverseGeocoding(latLong, weatherData, callback) {
     var apiKey = "ppQrUyVhFEYA7Fgo3KOUkOMOZMeIMDAf";
-    var apiURL = "https://open.mapquestapi.com/geocoding/v1/reverse?key=" + apiKey + "&location=" + latLong.coords.latitude + "," + latLong.coords.longitude;
+    var apiURL = "https://open.mapquestapi.com/geocoding/v1/reverse?key=" + apiKey + "&location=" + latLong.coords.latitude + "," + latLong.coords.longitude + "&locale=en_US";
     var cityState = new Object();
 
     $.getJSON(apiURL, function(data) {
