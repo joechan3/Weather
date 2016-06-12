@@ -92,7 +92,7 @@ $(document).ready(function () {
             }
 
             navigator.geolocation.getCurrentPosition(geolocSuccess, geolocError, {
-                timeout: 8000
+                timeout: 10000
             });
 
             window.setTimeout(locationNotShared, 10000);
