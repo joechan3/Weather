@@ -11,6 +11,7 @@ Weather and Corgi displays the local current weather with a matching background 
 * jQuery
 * Bootstrap
 * Brackets
+* JSLint
 
 ## Authors
 
